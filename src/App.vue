@@ -1,26 +1,43 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <navbar :pages="pages" :active-page="activePage"></navbar>
+  <!-- <page-viewer :page="pages[activePage]"></page-viewer> -->
+  <create-page @page-created="pageCreated"> </create-page>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Navbar from "./components/Navbar.vue";
+import PageViewer from "./components/PageViewer.vue";
+import CreatePage from "./components/CreatePage.vue";
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
-</script>
+    PageViewer,
+    Navbar,
+    CreatePage,
+  },
+  async created() {
+    await this.getPages();
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+    this.$bus.$on("navbarLinkActivated", (index) => {
+      this.activePage = index;
+    });
+  },
+  data() {
+    return {
+      activePage: 0,
+      pages: [],
+    };
+  },
+  methods: {
+    async getPages() {
+      let res = await fetch("pages.json");
+      let data = await res.json();
+
+      this.pages = data;
+    },
+    pageCreated(pageObj) {
+      this.pages.push(pageObj);
+    },
+  },
+};
+</script>
