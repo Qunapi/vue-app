@@ -3,7 +3,7 @@
   <div class="text-end">
     <router-link to="/pages/create" class="btn btn-primary btn-sm">New Page</router-link>
   </div>
-  <table class="table able-hover">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th>Title</th>
@@ -20,13 +20,14 @@
     </tbody>
   </table>
 </template>
+
 <script setup>
-import { inject } from "vue";
+import { ref, reactive, inject } from "vue";
 import { useRouter } from "vue-router";
 
 const $pages = inject("$pages");
-
 const router = useRouter();
+
 function goToPage(index) {
   router.push({ path: `pages/${index}/edit` });
 }

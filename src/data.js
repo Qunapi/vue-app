@@ -6,19 +6,19 @@ localStorage.setItem(
     {
       link: { linkText: "Home", linkUrl: "index.html" },
       pageTitle: "Home Page",
-      content: "This is the home content",
+      content: "This is the home content lOLOLO",
       published: true,
     },
     {
       link: { linkText: "About", linkUrl: "about.html" },
       pageTitle: "About Page",
-      content: "This is the about content",
+      content: "This is the about content aaaaaaaaaaaaa",
       published: true,
     },
     {
       link: { linkText: "Contact", linkUrl: "contact.html" },
       pageTitle: "Contact Page",
-      content: "This is the contact content",
+      content: "This is the contact content asdf sad",
       published: false,
     },
   ])
@@ -27,7 +27,16 @@ localStorage.setItem(
 let pageJson = localStorage.getItem(pagesKey);
 let pagesStore = JSON.parse(pageJson);
 
+function save() {
+  localStorage.setItem(pagesKey, JSON.stringify(pagesStore));
+}
+
 export default {
+  addPage(page) {
+    pagesStore.push(page);
+
+    save();
+  },
   getAllPages() {
     return pagesStore;
   },
@@ -39,7 +48,11 @@ export default {
   editPage(index, page) {
     pagesStore[index] = page;
 
-    localStorage.setItem(pagesKey, JSON.stringify(pagesStore));
+    save();
+  },
+  removePage(index) {
+    pagesStore.splice(index, 1);
 
+    save();
   },
 };

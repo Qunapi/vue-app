@@ -2,14 +2,21 @@
   <nav :class="[`navbar-${theme}`, `bg-${theme}`, 'navbar', 'navbar-expand-lg']">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">My Vue</a>
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-row">
-        <navbar-link v-for="(page, index) in publishedPages" :page="page" :index="index"></navbar-link>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <navbar-link
+          v-for="(page, index) in publishedPages"
+          class="nav-item"
+          :key="index"
+          :page="page"
+          :index="index"
+        ></navbar-link>
+
         <li>
-          <router-link aria-current="page" :to="`/pages`" class="nav-link" active-class="active"> Pages</router-link>
+          <router-link to="/pages" class="nav-link" active-class="active" aria-current="page">Pages</router-link>
         </li>
       </ul>
       <form class="d-flex">
-        <button class="btn btn-primary" @click.prevent="changeTheme()">Toggle Navbar</button>
+        <button class="btn btn-primary" @click.prevent="changeTheme()">Toggle</button>
       </form>
     </div>
   </nav>
@@ -21,11 +28,6 @@ import NavbarLink from "./NavbarLink.vue";
 export default {
   components: { NavbarLink },
   inject: ["$pages", "$bus"],
-  data() {
-    return {
-      theme: "light",
-    };
-  },
 
   created() {
     this.getThemeSetting();
@@ -35,11 +37,25 @@ export default {
     this.$bus.$on("page-updated", () => {
       this.pages = [...this.$pages.getAllPages()];
     });
+
+    this.$bus.$on("page-created", () => {
+      this.pages = [...this.$pages.getAllPages()];
+    });
+
+    this.$bus.$on("page-deleted", () => {
+      this.pages = [...this.$pages.getAllPages()];
+    });
   },
   computed: {
     publishedPages() {
-      return this.pages.filter((e) => e.published);
+      return this.pages.filter((p) => p.published);
     },
+  },
+  data() {
+    return {
+      theme: "light",
+      pages: [],
+    };
   },
   methods: {
     changeTheme() {
